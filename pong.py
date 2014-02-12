@@ -17,12 +17,12 @@ class Ball():
             print "BANG!"
             
         elif self.points[0][0]<=left_paddle.points[1][0] and (self.points[0][1]+self.size>=left_paddle.points[1][1] and self.points[0][1]+self.size<=left_paddle.points[2][1]):
-            b.vel[0] = -b.vel[0]
+            b.vel[0] = -(b.vel[0]-abs(left_paddle.vel)/10)
             b.vel[1] = ((self.points[0][1]+self.size)-(left_paddle.points[1][1]+left_paddle.size[1]))/7
             print "Bang!"
             
         elif self.points[1][0]>=right_paddle.points[1][0] and (self.points[1][1]+self.size>=right_paddle.points[1][1] and self.points[1][1]+self.size<=right_paddle.points[2][1]):
-            b.vel[0] = -(b.vel[0])
+            b.vel[0] = -(b.vel[0]+abs(right_paddle.vel)/10)
             b.vel[1] = ((self.points[1][1]+self.size)-(right_paddle.points[1][1]+right_paddle.size[1]))/7
             print "Bang!"
             
