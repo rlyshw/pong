@@ -1,9 +1,13 @@
+#Riley Shaw
 import simplegui
 width = 750
 height = 500
 left = 0
 right = 1
 game = False
+#Establish Initial Conditions. Width of the window, height of the window.
+#Left and right are assigne to integers for easier data manipulation.
+#Game is the condition that makes it all run.
 
 class Ball():
     def __init__(self):
@@ -11,42 +15,60 @@ class Ball():
         self.size = 5
         self.vel = [0,0]
         self.pos = [width/2-self.size,height/2-self.size]
+        #Init initializes these variables for each separate object
+        #Position is a function of width and height, so it starts in the center
+        
     def collision(self):
+        #Honestly, this function is convoluted and repititive. It might work better in the paddle class.
+        #Functions are repeated, which goes against DRY programming methods.
+        
         if self.points[2][1]>=height or self.points[1][1]<=0:
             b.vel[1] = -(b.vel[1])
-            
+        #If the y position of the top or bottom points exceed the vertical boundaries, velocity is negated.
         elif self.points[0][0]<=left_paddle.points[1][0] and (self.points[0][1]+self.size>=left_paddle.points[1][1] and self.points[0][1]+self.size<=left_paddle.points[2][1]):
             b.vel[0] = -(b.vel[0]-abs(left_paddle.vel)/10)
             b.vel[1] = ((self.points[0][1]+self.size)-(left_paddle.points[1][1]+left_paddle.size[1]))/7
+            #If the x and y of the ball are between the x and y of the paddle
+            #negate the x velocity and add a tenth of the paddle's velocity.
+            #The y velocity depends on the distance from the center of the paddle.
             
         elif self.points[1][0]>=right_paddle.points[1][0] and (self.points[1][1]+self.size>=right_paddle.points[1][1] and self.points[1][1]+self.size<=right_paddle.points[2][1]):
             b.vel[0] = -(b.vel[0]+abs(right_paddle.vel)/10)
             b.vel[1] = ((self.points[1][1]+self.size)-(right_paddle.points[1][1]+right_paddle.size[1]))/7
+            #Rinse and repeat for the right paddle. It's essentially an exact copy of the above conditional.
+            #Again, violating DRY principles of software development.
             
         elif self.points[1][0]<=left_paddle.points[1][0] and not (self.points[0][1]+self.size>=left_paddle.points[1][1] and self.points[0][1]+self.size<=left_paddle.points[2][1]):
             right_paddle.score += 1
             right_paddle.scored = True
             self.pos = [width/2-self.size,height/2-self.size]
             go()
+            #If the paddle misses then increase it's score and reset the ball and call the go() function.
+            #Go function acts as the intermediate reset.
             
         elif self.points[0][0]>=right_paddle.points[1][0] and not (self.points[1][1]+self.size>=right_paddle.points[1][1] and self.points[1][1]+self.size<=right_paddle.points[2][1]):
             left_paddle.score += 1
             left_paddle.scored = True
             self.pos = [width/2-self.size,height/2-self.size]
             go()
-            
+            #A copy of the above conditional, adjusted for the right paddle.
+            #Again a repeat, inefficient and wasteful.
         else:
             pass
+            #If none of the above conditions are met then do nothing because there is no collision.
 
     def update(self):
         self.points = [self.pos,[self.pos[0]+2*self.size, self.pos[1]],[self.pos[0]+2*self.size, self.pos[1]+2*self.size],[self.pos[0], self.pos[1]+2*self.size]]
         self.collision()
+        #This function is called inside of the main loop. The points list has to be created and updated in its entirety.
 
 b = Ball()
+#Create the Ball object, assign it to variable b
 
 def go():
     global game
     b.vel = [0,0]
+    #Stop the ball
     if right_paddle.scored:
         b.vel = [7, 0]
         right_paddle.scored = False
@@ -55,7 +77,8 @@ def go():
             b.pos = [width/2-b.size,height/2-b.size]
             b.vel = [0,0]
             game = False
-
+        #Right scored, send it right and reset the scored variable.
+        #If right score is ten then set win to true, reset the ball, and stop the game.
     elif left_paddle.scored:
         b.vel = [-7, 0]
         left_paddle.scored = False
@@ -64,8 +87,10 @@ def go():
             b.pos = [width/2-b.size,height/2-b.size]
             b.vel = [0,0]
             game = False
+        #Hey look I repeated myself again.
     else:
         b.vel = [7, 0]
+        #Send it right on first throw
 class Paddle:
     def __init__(self, side):
         global width, height
