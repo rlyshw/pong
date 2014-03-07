@@ -1,4 +1,5 @@
 #Riley Shaw
+#For use at codeskulptor.org
 import simplegui
 #Establish Initial Conditions. Width of the window, height of the window.
 #Left and right are assigne to integers for easier data manipulation.
